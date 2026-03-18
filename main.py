@@ -44,7 +44,13 @@ def verifica_senha(pessoa, senha):
     if senha == pessoa["senha"]:
         return True
     return False
-
+def verifica_valor(mensagem):
+    while True:
+        try:
+            valor = float(input(mensagem))
+            return valor
+        except ValueError:
+            print("Digite apenas valores numéricos!")
 
 carregar_usuario()
 
@@ -115,7 +121,7 @@ def tela_inicial(pessoa, pessoas):
     while True:
         os.system("clear")
         print("Bem vindo ao nosso banco!")
-        print("1 - verificar saldo")
+        print("1 - verificar saldos")
         print("2 - guardar dinheiro")
         print("3 - retirar dinheiro")
         print("4 - Alterar dados")
@@ -132,7 +138,10 @@ def tela_inicial(pessoa, pessoas):
             limpa()
             print(f"Valor atual : {pessoa['saldo']}")
             print("Qual valor deseja adicionar ?")
-            valor = input("Valor : ")
+            try: 
+                valor = float(input("Valor : "))
+            except ValueError:
+                print("Digite um valor numérico!")                
             print(f"Valor de {valor} foi adicionado a sua conta!")
             adicionar_saldo(pessoa, pessoas, valor)
 
@@ -141,26 +150,33 @@ def tela_inicial(pessoa, pessoas):
             pessoa["saldo"] = pessoa.get("saldo", 0)
             print(f"Saldo atual é : {pessoa['saldo']}")
             if pessoa["saldo"] > 0:
-                retirar = input("Qual valor deseja retirar : ")
-                limpa()
-                senha = input("Digite sua senha para confirmar a retirada : ")
-                if verifica_senha(pessoa, senha):
-                    print(f"Valor de R${retirar} foi retirado com sucesso!")
-                    retirar_saldo(pessoa, pessoas, retirar)
+             while True:    
+                try:    
+                    retirar = float(input("Qual valor deseja retirar : "))
+                except ValueError:
+                    limpa()   
+                    print("Digte um valor númerico!!")
                     time.sleep(1)
-                else:
-                    a = 2
-                    while a != 0:
-                        print(f"Senha incorreta!, {a} tentativas restantes ")
-                        senha = input("Digite a senha novamente : ")
-                        if verifica_senha(pessoa, senha):
-                            print("senha correta, valor retirado com sucesso")
-                            time.sleep(1)
-                            break
-                        else:
-                            print("senha errada")
-                        a -= 1
-                    print("Não ah mais tentativas restantes, voltando a tela inicial")
+                    limpa()
+            limpa()
+            senha = input("Digite sua senha para confirmar a retirada : ")
+            if verifica_senha(pessoa, senha):
+                print(f"Valor de R${retirar} foi retirado com sucesso!")
+                retirar_saldo(pessoa, pessoas, retirar)
+                time.sleep(1)
+            else:
+                a = 2
+                while a != 0:
+                    print(f"Senha incorreta!, {a} tentativas restantes ")
+                    senha = input("Digite a senha novamente : ")
+                    if verifica_senha(pessoa, senha):
+                        print("senha correta, valor retirado com sucesso")
+                        time.sleep(1)
+                        break
+                    else:
+                        print("senha errada")
+                    a -= 1
+                print("Não ah mais tentativas restantes, voltando a tela inicial")
         elif descisaobanco == "4":
             trocar_dados()
             time.sleep(1)
