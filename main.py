@@ -1,7 +1,8 @@
 import os
 import time
 import json
-
+from datetime import datetime
+data = datetime.now().strftime("%d/%m/%Y %H:%M")
 os.system("clear")
 
 
@@ -12,6 +13,7 @@ def limpa():
 def salvar_usuario(pessoas):
     with open("dados.json", "w") as arquivo:
         json.dump(pessoas, arquivo)
+            
 
 
 def carregar_usuario():
@@ -25,6 +27,13 @@ def buscar_usuario(nome, lista):
     for usuario in lista:
         if usuario["nome"] == nome:
             return usuario
+    return None
+
+
+def buscar_cpf(cpf, lista):
+    for pessoa in lista:
+        if pessoa["cpf"] == cpf:
+            return pessoa
     return None
 
 
@@ -44,6 +53,8 @@ def verifica_senha(pessoa, senha):
     if senha == pessoa["senha"]:
         return True
     return False
+
+
 def verifica_valor(mensagem):
     while True:
         try:
@@ -52,8 +63,38 @@ def verifica_valor(mensagem):
         except ValueError:
             print("Digite apenas valores numéricos!")
 
-carregar_usuario()
 
+def saldo_positivo(pessoa, valor):
+    pessoa["saldo"] = pessoa.get("saldo")
+    if pessoa["saldo"] <= 0:
+        print("Saldo negativo!")
+        time.sleep(1)
+        return False
+    elif valor > pessoa["saldo"]:
+        print("Valor maior que o saldo disponivel")
+        time.sleep(1)
+        return False
+    return True
+
+
+def transferencia(pessoa, valor, pessoas):
+    carregar_usuario()
+    if saldo_positivo(pessoa, valor):
+        cpf = int(input("Digite o cpf do destinatio: "))
+        destinatario = buscar_cpf(cpf, pessoas)
+        if destinatario:
+            pessoa["saldo"] = pessoa.get("saldo", 0)
+            pessoa["saldo"] = pessoa["saldo"] - float(valor)
+            destinatario["saldo"] = destinatario["saldo"] + float(valor)
+            salvar_usuario(pessoas)
+        else:
+            print("CPF não está cadastrado!")
+
+#def estrato_bancario(tipo, pessoa):
+
+
+
+carregar_usuario()
 
 def primeiro_acesso():
     os.system("clear")
@@ -66,9 +107,9 @@ def primeiro_acesso():
         senha = input("Digite sua senha : ")
         nova_pessoa = {"nome": nome, "senha": senha, "saldo": 0.0}
         pessoas.append(nova_pessoa)
-        pessoa = salvar_usuario(pessoas)
+        salvar_usuario(pessoas)
         print("Cadastro adicionado com sucesso")
-        tela_inicial(pessoa, pessoas)
+        tela_inicial(nova_pessoa, pessoas)
 
     elif a == "login":
         while True:
@@ -124,41 +165,37 @@ def tela_inicial(pessoa, pessoas):
         print("1 - verificar saldos")
         print("2 - guardar dinheiro")
         print("3 - retirar dinheiro")
-        print("4 - Alterar dados")
-        print("5 - Sair")
+        print("4 - transferir valor")
+        print("5 - Alterar dados")
+        print("6 - Sair")
         descisaobanco = input("O que deseja fazer : ")
         if descisaobanco == "1":
             print("a")
             os.system("clear")
-            pessoa["]saldo"] = pessoa.get("saldo", 0)
+            pessoa["saldo"] = pessoa.get("saldo", 0)
             print(f"O seu saldo é : {pessoa['saldo']}")
             time.sleep(2)
 
         elif descisaobanco == "2":
+            operação = "deposito"
+            data
             limpa()
             print(f"Valor atual : {pessoa['saldo']}")
-            print("Qual valor deseja adicionar ?")
-            try: 
-                valor = float(input("Valor : "))
-            except ValueError:
-                print("Digite um valor numérico!")                
+            valor = verifica_valor("Qual valor deseja adicionar ?")
             print(f"Valor de {valor} foi adicionado a sua conta!")
+            extrato = {"tipo" : operação, "data" : data }
             adicionar_saldo(pessoa, pessoas, valor)
+            
 
         elif descisaobanco == "3":
             limpa()
             pessoa["saldo"] = pessoa.get("saldo", 0)
             print(f"Saldo atual é : {pessoa['saldo']}")
             if pessoa["saldo"] > 0:
-             while True:    
-                try:    
-                    retirar = float(input("Qual valor deseja retirar : "))
-                except ValueError:
-                    limpa()   
-                    print("Digte um valor númerico!!")
-                    time.sleep(1)
-                    limpa()
-            limpa()
+                retirar = verifica_valor("Digite o valor a ser retirado : ")
+                limpa()
+            else:
+                print("Saldo insuficiente para retirar")
             senha = input("Digite sua senha para confirmar a retirada : ")
             if verifica_senha(pessoa, senha):
                 print(f"Valor de R${retirar} foi retirado com sucesso!")
@@ -178,10 +215,19 @@ def tela_inicial(pessoa, pessoas):
                     a -= 1
                 print("Não ah mais tentativas restantes, voltando a tela inicial")
         elif descisaobanco == "4":
+            limpa()
+            valor = verifica_valor("Qual valor deseja transferir : ")
+            transferencia(
+                pessoa,
+                valor,
+                pessoas,
+            )
+
+        elif descisaobanco == "5":
             trocar_dados()
             time.sleep(1)
             tela_inicial(pessoa, pessoa)
-        elif descisaobanco == "5":
+        elif descisaobanco == "6":
             break
         else:
             print("Digite uma oppção válida!")
