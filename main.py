@@ -2,7 +2,7 @@ import os
 import time
 import json
 from datetime import datetime
-data = datetime.now().strftime("%d/%m/%Y %H:%M")
+datetime.now().strftime("%d/%m/%Y %H:%M")
 os.system("clear")
 
 
@@ -12,7 +12,7 @@ def limpa():
 
 def salvar_usuario(pessoas):
     with open("dados.json", "w") as arquivo:
-        json.dump(pessoas, arquivo)
+        json.dump(pessoas, arquivo, indent=4)
             
 
 
@@ -36,17 +36,16 @@ def buscar_cpf(cpf, lista):
             return pessoa
     return None
 
-
 def adicionar_saldo(pessoa, pessoas, valor):
     pessoa["saldo"] = pessoa.get("saldo", 0) + float(valor)
     with open("dados.json", "w") as arquivo:
-        json.dump(pessoas, arquivo)
+        json.dump(pessoas, arquivo, indent=4)
 
 
 def retirar_saldo(pessoa, pessoas, valor):
     pessoa["saldo"] = pessoa.get("saldo", 0) - float(valor)
     with open("dados.json", "w") as arquivo:
-        json.dump(pessoas, arquivo)
+        json.dump(pessoas, arquivo, indent=4)
 
 
 def verifica_senha(pessoa, senha):
@@ -86,13 +85,26 @@ def transferencia(pessoa, valor, pessoas):
             pessoa["saldo"] = pessoa.get("saldo", 0)
             pessoa["saldo"] = pessoa["saldo"] - float(valor)
             destinatario["saldo"] = destinatario["saldo"] + float(valor)
+            extrato_bancario(pessoa,"transferencia",valor, destinatario )
             salvar_usuario(pessoas)
+            print("deu certo")
+            time.sleep(1)
         else:
             print("CPF não está cadastrado!")
+            time.sleep(1)
 
-#def estrato_bancario(tipo, pessoa):
+def extrato_bancario(pessoa, tipo, valor, outro=None):
+    if "extrato" not in pessoa:
+        pessoa["extrato"] = []
+    registro = {
+        "tipo" : tipo,
+        "valor" : valor,
+        "data" : datetime.now().strftime("%d/%m/%Y %H:%M"),
+        "outro" : outro
+    }
+    pessoa["extrato"].append(registro)
 
-
+#def mostrar_extrato():
 
 carregar_usuario()
 
@@ -175,15 +187,13 @@ def tela_inicial(pessoa, pessoas):
             pessoa["saldo"] = pessoa.get("saldo", 0)
             print(f"O seu saldo é : {pessoa['saldo']}")
             time.sleep(2)
-
+            
         elif descisaobanco == "2":
-            operação = "deposito"
-            data
             limpa()
             print(f"Valor atual : {pessoa['saldo']}")
             valor = verifica_valor("Qual valor deseja adicionar ?")
             print(f"Valor de {valor} foi adicionado a sua conta!")
-            extrato = {"tipo" : operação, "data" : data }
+            extrato_bancario(pessoa, "deposito", valor)        
             adicionar_saldo(pessoa, pessoas, valor)
             
 
@@ -199,29 +209,28 @@ def tela_inicial(pessoa, pessoas):
             senha = input("Digite sua senha para confirmar a retirada : ")
             if verifica_senha(pessoa, senha):
                 print(f"Valor de R${retirar} foi retirado com sucesso!")
+                extrato_bancario(pessoa,"retirada",retirar)
                 retirar_saldo(pessoa, pessoas, retirar)
                 time.sleep(1)
             else:
                 a = 2
                 while a != 0:
+                    limpa()
                     print(f"Senha incorreta!, {a} tentativas restantes ")
                     senha = input("Digite a senha novamente : ")
                     if verifica_senha(pessoa, senha):
-                        print("senha correta, valor retirado com sucesso")
-                        time.sleep(1)
+                        limpa()
+                        print("Valor retirado com sucesso!")
+                        time.sleep(2)
+                        extrato_bancario(pessoa,"retirada",retirar)
+                        retirar_saldo(pessoa, pessoas, retirar)
                         break
-                    else:
-                        print("senha errada")
                     a -= 1
                 print("Não ah mais tentativas restantes, voltando a tela inicial")
         elif descisaobanco == "4":
             limpa()
             valor = verifica_valor("Qual valor deseja transferir : ")
-            transferencia(
-                pessoa,
-                valor,
-                pessoas,
-            )
+            transferencia(pessoa, valor, pessoas)
 
         elif descisaobanco == "5":
             trocar_dados()
