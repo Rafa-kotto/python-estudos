@@ -100,11 +100,17 @@ def extrato_bancario(pessoa, tipo, valor, outro=None):
         "tipo" : tipo,
         "valor" : valor,
         "data" : datetime.now().strftime("%d/%m/%Y %H:%M"),
-        "outro" : outro
+        "outro" : outro,
+        "id" : len(pessoa["extrato"]) + 1 
     }
     pessoa["extrato"].append(registro)
 
-#def mostrar_extrato():
+def mostrar_extrato_geral(pessoa):
+    limpa()
+    extrato = pessoa.get("extrato" , 0)
+    for registro in extrato:
+        print(f"ID : {registro['id']} | Data : {registro['data']} | Tipo : {registro['tipo']} | Valor : {registro['valor']}")
+    time.sleep(1)
 
 carregar_usuario()
 
@@ -117,6 +123,8 @@ def primeiro_acesso():
         os.system("clear")
         nome = input("Digite seu  nome : ")
         senha = input("Digite sua senha : ")
+        cpf = input("Digite seu cpf : ")
+        
         nova_pessoa = {"nome": nome, "senha": senha, "saldo": 0.0}
         pessoas.append(nova_pessoa)
         salvar_usuario(pessoas)
@@ -179,7 +187,8 @@ def tela_inicial(pessoa, pessoas):
         print("3 - retirar dinheiro")
         print("4 - transferir valor")
         print("5 - Alterar dados")
-        print("6 - Sair")
+        print("6 - Mostrar extrato")
+        print("7 - Sair")
         descisaobanco = input("O que deseja fazer : ")
         if descisaobanco == "1":
             print("a")
@@ -237,7 +246,13 @@ def tela_inicial(pessoa, pessoas):
             time.sleep(1)
             tela_inicial(pessoa, pessoa)
         elif descisaobanco == "6":
+            mostrar_extrato_geral(pessoa)
+        
+        elif descisaobanco == "7":
             break
+        
+        
+        
         else:
             print("Digite uma oppção válida!")
             time.sleep(1)
