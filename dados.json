@@ -1,1 +1,70 @@
-[{"nome": "luciano", "senha": "3012", "saldo": 40.0}, {"nome": "lucas", "senha": "2010", "saldo": 100.0}, {"nome": "rafa", "senha": "123", "saldo": 80.0}]
+[
+    {
+        "nome": "rafa",
+        "senha": "321",
+        "saldo": 20.0,
+        "cpf": "12345213",
+        "extrato": [
+            {
+                "tipo": "deposito",
+                "valor": 10.0,
+                "data": "20/03/2026 15:11"
+            },
+            {
+                "tipo": "deposito",
+                "valor": 10.0,
+                "data": "20/03/2026 15:19"
+            },
+            {
+                "tipo": "retirada",
+                "valor": 10.0,
+                "data": "20/03/2026 15:20"
+            },
+            {
+                "tipo": "deposito",
+                "valor": 10.0,
+                "data": "20/03/2026 15:29",
+                "outro": null
+            },
+            {
+                "tipo": "deposito",
+                "valor": 100.0,
+                "data": "20/03/2026 17:17",
+                "outro": null
+            },
+            {
+                "tipo": "transferencia",
+                "valor": 100.0,
+                "data": "20/03/2026 17:24",
+                "outro": {
+                    "nome": "lucas",
+                    "senha": "3012",
+                    "saldo": 1100.0,
+                    "cpf": 123456789,
+                    "extrato": [
+                        {
+                            "tipo": "deposito",
+                            "valor": 1000.0,
+                            "data": "20/03/2026 17:17",
+                            "outro": null
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "nome": "lucas",
+        "senha": "3012",
+        "saldo": 1100.0,
+        "cpf": 123456789,
+        "extrato": [
+            {
+                "tipo": "deposito",
+                "valor": 1000.0,
+                "data": "20/03/2026 17:17",
+                "outro": null
+            }
+        ]
+    }
+]
