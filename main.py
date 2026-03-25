@@ -112,6 +112,7 @@ def mostrar_extrato_geral(pessoa):
         print(f"ID : {registro['id']} | Data : {registro['data']} | Tipo : {registro['tipo']} | Valor : {registro['valor']}")
     time.sleep(1)
 
+
 carregar_usuario()
 
 def primeiro_acesso():
