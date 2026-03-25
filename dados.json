@@ -1,1 +1,23 @@
-[{"nome": "luciano", "senha": "3012", "saldo": 40.0}, {"nome": "lucas", "senha": "2010", "saldo": 100.0}, {"nome": "rafa", "senha": "123", "saldo": 80.0}]
+[
+    {
+        "nome": "rafa",
+        "senha": "123",
+        "saldo": 40.0,
+        "extrato": [
+            {
+                "tipo": "deposito",
+                "valor": 10.0,
+                "data": "24/03/2026 17:14",
+                "outro": null,
+                "id": 1
+            },
+            {
+                "tipo": "deposito",
+                "valor": 10.0,
+                "data": "24/03/2026 17:14",
+                "outro": null,
+                "id": 2
+            }
+        ]
+    }
+]
