@@ -80,6 +80,7 @@ def transferencia(pessoa, valor, pessoas):
     carregar_usuario()
     if saldo_positivo(pessoa, valor):
         cpf = int(input("Digite o cpf do destinatio: "))
+        validar_cpf(cpf)
         destinatario = buscar_cpf(cpf, pessoas)
         if destinatario:
             pessoa["saldo"] = pessoa.get("saldo", 0)
@@ -112,6 +113,14 @@ def mostrar_extrato_geral(pessoa):
         print(f"ID : {registro['id']} | Data : {registro['data']} | Tipo : {registro['tipo']} | Valor : {registro['valor']}")
     time.sleep(1)
 
+def validar_cpf(cpf):
+    a = str(cpf)
+    if len(a) != 11:
+        print("Cpf inválido")
+        time.sleep(1)
+        return False
+    return True
+
 
 carregar_usuario()
 
@@ -121,16 +130,20 @@ def primeiro_acesso():
     a = input("Deseja realizar o login ou realizar o cadastro : ")
     pessoas = carregar_usuario()
     if a == "cadastro":
-        os.system("clear")
-        nome = input("Digite seu  nome : ")
-        senha = input("Digite sua senha : ")
-        cpf = input("Digite seu cpf : ")
-        
-        nova_pessoa = {"nome": nome, "senha": senha, "saldo": 0.0}
-        pessoas.append(nova_pessoa)
-        salvar_usuario(pessoas)
-        print("Cadastro adicionado com sucesso")
-        tela_inicial(nova_pessoa, pessoas)
+        while True:          
+            os.system("clear")
+            nome = input("Digite seu  nome : ")
+            senha = input("Digite sua senha : ")
+            cpf = input("Digite seu cpf : ")
+            if validar_cpf(cpf):
+                nova_pessoa = {"nome": nome, "senha": senha, "saldo": 0.0, "cpf" : cpf}
+                pessoas.append(nova_pessoa)
+                salvar_usuario(pessoas)
+                print("Cadastro adicionado com sucesso")
+                tela_inicial(nova_pessoa, pessoas)
+            else:
+                limpa()
+                print("Cpf invalido")
 
     elif a == "login":
         while True:
