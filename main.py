@@ -78,21 +78,18 @@ def saldo_positivo(pessoa, valor):
 
 def transferencia(pessoa, valor, pessoas):
     carregar_usuario()
-    if saldo_positivo(pessoa, valor):
+    if saldo_positivo(pessoa, valor): 
         cpf = int(input("Digite o cpf do destinatio: "))
-        validar_cpf(cpf)
-        destinatario = buscar_cpf(cpf, pessoas)
-        if destinatario:
-            pessoa["saldo"] = pessoa.get("saldo", 0)
-            pessoa["saldo"] = pessoa["saldo"] - float(valor)
-            destinatario["saldo"] = destinatario["saldo"] + float(valor)
-            extrato_bancario(pessoa,"transferencia",valor, destinatario )
-            salvar_usuario(pessoas)
-            print("deu certo")
-            time.sleep(1)
-        else:
-            print("CPF não está cadastrado!")
-            time.sleep(1)
+        if validar_cpf(cpf):
+            destinatario = buscar_cpf(cpf, pessoas)
+            if destinatario:
+                pessoa["saldo"] = pessoa.get("saldo", 0)
+                pessoa["saldo"] = pessoa["saldo"] - float(valor)
+                destinatario["saldo"] = destinatario["saldo"] + float(valor)
+                extrato_bancario(pessoa,"transferencia",valor, destinatario )
+                salvar_usuario(pessoas)
+                print("deu certo")
+                time.sleep(1)
 
 def extrato_bancario(pessoa, tipo, valor, outro=None):
     if "extrato" not in pessoa:
@@ -116,7 +113,8 @@ def mostrar_extrato_geral(pessoa):
 def validar_cpf(cpf):
     a = str(cpf)
     if len(a) != 11:
-        print("Cpf inválido")
+        limpa()
+        print("Cpf inválido, tente novamente")
         time.sleep(1)
         return False
     return True
