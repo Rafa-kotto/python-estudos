@@ -2,22 +2,33 @@
     {
         "nome": "rafa",
         "senha": "123",
-        "saldo": 40.0,
+        "saldo": 30.0,
+        "cpf": 12345678901,
         "extrato": [
             {
-                "tipo": "deposito",
+                "tipo": "transferencia",
                 "valor": 10.0,
-                "data": "24/03/2026 17:14",
-                "outro": null,
+                "data": "27/03/2026 15:27",
+                "outro": {
+                    "nome": "rafa",
+                    "senha": "10",
+                    "saldo": 10.0,
+                    "cpf": "123.456.789-01"
+                },
                 "id": 1
-            },
-            {
-                "tipo": "deposito",
-                "valor": 10.0,
-                "data": "24/03/2026 17:14",
-                "outro": null,
-                "id": 2
             }
         ]
+    },
+    {
+        "nome": "pedro",
+        "senha": "123",
+        "saldo": 40.0,
+        "cpf": "123.456.780-01"
+    },
+    {
+        "nome": "rafa",
+        "senha": "10",
+        "saldo": 10.0,
+        "cpf": "123.456.789-01"
     }
 ]

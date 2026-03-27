@@ -2,6 +2,7 @@ import os
 import time
 import json
 from datetime import datetime
+
 datetime.now().strftime("%d/%m/%Y %H:%M")
 os.system("clear")
 
@@ -13,7 +14,6 @@ def limpa():
 def salvar_usuario(pessoas):
     with open("dados.json", "w") as arquivo:
         json.dump(pessoas, arquivo, indent=4)
-            
 
 
 def carregar_usuario():
@@ -35,6 +35,7 @@ def buscar_cpf(cpf, lista):
         if pessoa["cpf"] == cpf:
             return pessoa
     return None
+
 
 def adicionar_saldo(pessoa, pessoas, valor):
     pessoa["saldo"] = pessoa.get("saldo", 0) + float(valor)
@@ -79,41 +80,75 @@ def saldo_positivo(pessoa, valor):
 def transferencia(pessoa, valor, pessoas):
     carregar_usuario()
     if saldo_positivo(pessoa, valor):
-        cpf = int(input("Digite o cpf do destinatio: "))
-        destinatario = buscar_cpf(cpf, pessoas)
-        if destinatario:
-            pessoa["saldo"] = pessoa.get("saldo", 0)
-            pessoa["saldo"] = pessoa["saldo"] - float(valor)
-            destinatario["saldo"] = destinatario["saldo"] + float(valor)
-            extrato_bancario(pessoa,"transferencia",valor, destinatario )
-            salvar_usuario(pessoas)
-            print("deu certo")
-            time.sleep(1)
+        cpf = input("Digite o cpf do destinatio: ")
+        cpf = formata_cpf(cpf)
+        print(cpf)
+        time.sleep(1)
+        if validar_cpf(cpf):
+            destinatario = buscar_cpf(cpf, pessoas)
+            time.sleep(2)
+            if destinatario:
+                time.sleep(2)
+                pessoa["saldo"] = pessoa.get("saldo", 0)
+                pessoa["saldo"] = pessoa["saldo"] - float(valor)
+                destinatario["saldo"] = destinatario["saldo"] + float(valor)
+                extrato_bancario(pessoa, "transferencia", valor, destinatario)
+                salvar_usuario(pessoas)
+                print("deu certo")
+                time.sleep(2)
+            else:
+                print()
         else:
-            print("CPF não está cadastrado!")
-            time.sleep(1)
+            print("Cpf não cadastrado!")
+            time.sleep(2)
+
 
 def extrato_bancario(pessoa, tipo, valor, outro=None):
     if "extrato" not in pessoa:
         pessoa["extrato"] = []
     registro = {
-        "tipo" : tipo,
-        "valor" : valor,
-        "data" : datetime.now().strftime("%d/%m/%Y %H:%M"),
-        "outro" : outro,
-        "id" : len(pessoa["extrato"]) + 1 
+        "tipo": tipo,
+        "valor": valor,
+        "data": datetime.now().strftime("%d/%m/%Y %H:%M"),
+        "outro": outro,
+        "id": len(pessoa["extrato"]) + 1,
     }
     pessoa["extrato"].append(registro)
 
+
 def mostrar_extrato_geral(pessoa):
     limpa()
-    extrato = pessoa.get("extrato" , 0)
+    extrato = pessoa.get("extrato", 0)
     for registro in extrato:
-        print(f"ID : {registro['id']} | Data : {registro['data']} | Tipo : {registro['tipo']} | Valor : {registro['valor']}")
+        print(
+            f"ID : {registro['id']} | Data : {registro['data']} | Tipo : {registro['tipo']} | Valor : {registro['valor']}"
+        )
     time.sleep(1)
 
 
+def limpa_cpf(cpf):
+    cpf_limpo = "".join(filter(str.isdigit, cpf))
+    return cpf_limpo
+
+
+def validar_cpf(cpf):
+    cpf = limpa_cpf(cpf)
+    if len(cpf) != 11:
+        limpa()
+        print("Cpf inválido, tente novamente")
+        time.sleep(1)
+        return False
+    return True
+
+
+def formata_cpf(cpf):
+    cpf_formatado = limpa_cpf(cpf)
+    cpf_formatado = f"{cpf_formatado[:3]}.{cpf_formatado[3:6]}.{cpf_formatado[6:9]}-{cpf_formatado[9:12]}"
+    return cpf_formatado
+
+
 carregar_usuario()
+
 
 def primeiro_acesso():
     os.system("clear")
@@ -121,16 +156,25 @@ def primeiro_acesso():
     a = input("Deseja realizar o login ou realizar o cadastro : ")
     pessoas = carregar_usuario()
     if a == "cadastro":
-        os.system("clear")
-        nome = input("Digite seu  nome : ")
-        senha = input("Digite sua senha : ")
-        cpf = input("Digite seu cpf : ")
-        
-        nova_pessoa = {"nome": nome, "senha": senha, "saldo": 0.0}
-        pessoas.append(nova_pessoa)
-        salvar_usuario(pessoas)
-        print("Cadastro adicionado com sucesso")
-        tela_inicial(nova_pessoa, pessoas)
+        while True:
+            os.system("clear")
+            nome = input("Digite seu  nome : ")
+            senha = input("Digite sua senha : ")
+            cpf = input("Digite seu cpf : ")
+            if validar_cpf(cpf):
+                nova_pessoa = {
+                    "nome": nome,
+                    "senha": senha,
+                    "saldo": 0.0,
+                    "cpf": formata_cpf(cpf),
+                }
+                pessoas.append(nova_pessoa)
+                salvar_usuario(pessoas)
+                print("Cadastro adicionado com sucesso")
+                tela_inicial(nova_pessoa, pessoas)
+            else:
+                limpa()
+                print("Cpf invalido")
 
     elif a == "login":
         while True:
@@ -197,15 +241,14 @@ def tela_inicial(pessoa, pessoas):
             pessoa["saldo"] = pessoa.get("saldo", 0)
             print(f"O seu saldo é : {pessoa['saldo']}")
             time.sleep(2)
-            
+
         elif descisaobanco == "2":
             limpa()
             print(f"Valor atual : {pessoa['saldo']}")
             valor = verifica_valor("Qual valor deseja adicionar ?")
             print(f"Valor de {valor} foi adicionado a sua conta!")
-            extrato_bancario(pessoa, "deposito", valor)        
+            extrato_bancario(pessoa, "deposito", valor)
             adicionar_saldo(pessoa, pessoas, valor)
-            
 
         elif descisaobanco == "3":
             limpa()
@@ -219,7 +262,7 @@ def tela_inicial(pessoa, pessoas):
             senha = input("Digite sua senha para confirmar a retirada : ")
             if verifica_senha(pessoa, senha):
                 print(f"Valor de R${retirar} foi retirado com sucesso!")
-                extrato_bancario(pessoa,"retirada",retirar)
+                extrato_bancario(pessoa, "retirada", retirar)
                 retirar_saldo(pessoa, pessoas, retirar)
                 time.sleep(1)
             else:
@@ -232,7 +275,7 @@ def tela_inicial(pessoa, pessoas):
                         limpa()
                         print("Valor retirado com sucesso!")
                         time.sleep(2)
-                        extrato_bancario(pessoa,"retirada",retirar)
+                        extrato_bancario(pessoa, "retirada", retirar)
                         retirar_saldo(pessoa, pessoas, retirar)
                         break
                     a -= 1
@@ -248,12 +291,10 @@ def tela_inicial(pessoa, pessoas):
             tela_inicial(pessoa, pessoa)
         elif descisaobanco == "6":
             mostrar_extrato_geral(pessoa)
-        
+
         elif descisaobanco == "7":
             break
-        
-        
-        
+
         else:
             print("Digite uma oppção válida!")
             time.sleep(1)
