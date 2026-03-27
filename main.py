@@ -79,8 +79,9 @@ def saldo_positivo(pessoa, valor):
 def transferencia(pessoa, valor, pessoas):
     carregar_usuario()
     if saldo_positivo(pessoa, valor): 
-        cpf = int(input("Digite o cpf do destinatio: "))
+        cpf = input("Digite o cpf do destinatio: ")
         if validar_cpf(cpf):
+            formata_cpf(cpf)
             destinatario = buscar_cpf(cpf, pessoas)
             if destinatario:
                 pessoa["saldo"] = pessoa.get("saldo", 0)
@@ -110,6 +111,10 @@ def mostrar_extrato_geral(pessoa):
         print(f"ID : {registro['id']} | Data : {registro['data']} | Tipo : {registro['tipo']} | Valor : {registro['valor']}")
     time.sleep(1)
 
+def limpa_cpf(cpf):
+    cpf_limpo = "".join(filter(str.isdigit, cpf))
+    return cpf_limpo
+
 def validar_cpf(cpf):
     a = str(cpf)
     if len(a) != 11:
@@ -119,6 +124,10 @@ def validar_cpf(cpf):
         return False
     return True
 
+def formata_cpf(cpf):
+    cpf_formatado = limpa_cpf(cpf)
+    cpf_formatado = f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:12]}"
+    return cpf_formatado
 
 carregar_usuario()
 
@@ -134,7 +143,7 @@ def primeiro_acesso():
             senha = input("Digite sua senha : ")
             cpf = input("Digite seu cpf : ")
             if validar_cpf(cpf):
-                nova_pessoa = {"nome": nome, "senha": senha, "saldo": 0.0, "cpf" : cpf}
+                nova_pessoa = {"nome": nome, "senha": senha, "saldo": 0.0, "cpf" : formata_cpf(cpf)}
                 pessoas.append(nova_pessoa)
                 salvar_usuario(pessoas)
                 print("Cadastro adicionado com sucesso")
