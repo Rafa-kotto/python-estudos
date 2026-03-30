@@ -2,7 +2,6 @@ import os
 import time
 import json
 from datetime import datetime
-
 datetime.now().strftime("%d/%m/%Y %H:%M")
 os.system("clear")
 
@@ -14,6 +13,7 @@ def limpa():
 def salvar_usuario(pessoas):
     with open("dados.json", "w") as arquivo:
         json.dump(pessoas, arquivo, indent=4)
+            
 
 
 def carregar_usuario():
@@ -80,49 +80,37 @@ def saldo_positivo(pessoa, valor):
 def transferencia(pessoa, valor, pessoas):
     carregar_usuario()
     if saldo_positivo(pessoa, valor):
-        cpf = input("Digite o cpf do destinatio: ")
-        cpf = formata_cpf(cpf)
-        print(cpf)
-        time.sleep(1)
-        if validar_cpf(cpf):
-            destinatario = buscar_cpf(cpf, pessoas)
-            time.sleep(2)
-            if destinatario:
-                time.sleep(2)
-                pessoa["saldo"] = pessoa.get("saldo", 0)
-                pessoa["saldo"] = pessoa["saldo"] - float(valor)
-                destinatario["saldo"] = destinatario["saldo"] + float(valor)
-                extrato_bancario(pessoa, "transferencia", valor, destinatario)
-                salvar_usuario(pessoas)
-                print("deu certo")
-                time.sleep(2)
-            else:
-                print()
+        cpf = int(input("Digite o cpf do destinatio: "))
+        destinatario = buscar_cpf(cpf, pessoas)
+        if destinatario:
+            pessoa["saldo"] = pessoa.get("saldo", 0)
+            pessoa["saldo"] = pessoa["saldo"] - float(valor)
+            destinatario["saldo"] = destinatario["saldo"] + float(valor)
+            extrato_bancario(pessoa,"transferencia",valor, destinatario )
+            salvar_usuario(pessoas)
+            print("deu certo")
+            time.sleep(1)
         else:
-            print("Cpf não cadastrado!")
-            time.sleep(2)
-
+            print("CPF não está cadastrado!")
+            time.sleep(1)
 
 def extrato_bancario(pessoa, tipo, valor, outro=None):
     if "extrato" not in pessoa:
         pessoa["extrato"] = []
     registro = {
-        "tipo": tipo,
-        "valor": valor,
-        "data": datetime.now().strftime("%d/%m/%Y %H:%M"),
-        "outro": outro,
-        "id": len(pessoa["extrato"]) + 1,
+        "tipo" : tipo,
+        "valor" : valor,
+        "data" : datetime.now().strftime("%d/%m/%Y %H:%M"),
+        "outro" : outro,
+        "id" : len(pessoa["extrato"]) + 1 
     }
     pessoa["extrato"].append(registro)
 
-
 def mostrar_extrato_geral(pessoa):
     limpa()
-    extrato = pessoa.get("extrato", 0)
+    extrato = pessoa.get("extrato" , 0)
     for registro in extrato:
-        print(
-            f"ID : {registro['id']} | Data : {registro['data']} | Tipo : {registro['tipo']} | Valor : {registro['valor']}"
-        )
+        print(f"ID : {registro['id']} | Data : {registro['data']} | Tipo : {registro['tipo']} | Valor : {registro['valor']}")
     time.sleep(1)
 
 
