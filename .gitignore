@@ -1,0 +1,13 @@
+ # Cache do Python
+__pycache__/
+*.pyc
+
+# Arquivo de dados
+data/dados.json
+
+# Ambiente virtual (se tiver)
+venv/
+.env
+
+# VSCode
+.vscode/

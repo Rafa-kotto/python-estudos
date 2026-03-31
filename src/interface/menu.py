@@ -1,141 +1,24 @@
-import os
-import time
-import json
-from datetime import datetime
-datetime.now().strftime("%d/%m/%Y %H:%M")
-os.system("clear")
-
-
-def limpa():
-    os.system("clear")
-
-
-def salvar_usuario(pessoas):
-    with open("dados.json", "w") as arquivo:
-        json.dump(pessoas, arquivo, indent=4)
-            
-
-
-def carregar_usuario():
-    if os.path.exists("dados.json") and os.path.getsize("dados.json") > 0:
-        with open("dados.json", "r") as arquivo:
-            return json.load(arquivo)
-    return []
-
-
-def buscar_usuario(nome, lista):
-    for usuario in lista:
-        if usuario["nome"] == nome:
-            return usuario
-    return None
-
-
-def buscar_cpf(cpf, lista):
-    for pessoa in lista:
-        if pessoa["cpf"] == cpf:
-            return pessoa
-    return None
-
-
-def adicionar_saldo(pessoa, pessoas, valor):
-    pessoa["saldo"] = pessoa.get("saldo", 0) + float(valor)
-    with open("dados.json", "w") as arquivo:
-        json.dump(pessoas, arquivo, indent=4)
-
-
-def retirar_saldo(pessoa, pessoas, valor):
-    pessoa["saldo"] = pessoa.get("saldo", 0) - float(valor)
-    with open("dados.json", "w") as arquivo:
-        json.dump(pessoas, arquivo, indent=4)
-
-
-def verifica_senha(pessoa, senha):
-    if senha == pessoa["senha"]:
-        return True
-    return False
-
-
-def verifica_valor(mensagem):
-    while True:
-        try:
-            valor = float(input(mensagem))
-            return valor
-        except ValueError:
-            print("Digite apenas valores numéricos!")
-
-
-def saldo_positivo(pessoa, valor):
-    pessoa["saldo"] = pessoa.get("saldo")
-    if pessoa["saldo"] <= 0:
-        print("Saldo negativo!")
-        time.sleep(1)
-        return False
-    elif valor > pessoa["saldo"]:
-        print("Valor maior que o saldo disponivel")
-        time.sleep(1)
-        return False
-    return True
-
-
-def transferencia(pessoa, valor, pessoas):
-    carregar_usuario()
-    if saldo_positivo(pessoa, valor):
-        cpf = int(input("Digite o cpf do destinatio: "))
-        destinatario = buscar_cpf(cpf, pessoas)
-        if destinatario:
-            pessoa["saldo"] = pessoa.get("saldo", 0)
-            pessoa["saldo"] = pessoa["saldo"] - float(valor)
-            destinatario["saldo"] = destinatario["saldo"] + float(valor)
-            extrato_bancario(pessoa,"transferencia",valor, destinatario )
-            salvar_usuario(pessoas)
-            print("deu certo")
-            time.sleep(1)
-        else:
-            print("CPF não está cadastrado!")
-            time.sleep(1)
-
-def extrato_bancario(pessoa, tipo, valor, outro=None):
-    if "extrato" not in pessoa:
-        pessoa["extrato"] = []
-    registro = {
-        "tipo" : tipo,
-        "valor" : valor,
-        "data" : datetime.now().strftime("%d/%m/%Y %H:%M"),
-        "outro" : outro,
-        "id" : len(pessoa["extrato"]) + 1 
-    }
-    pessoa["extrato"].append(registro)
-
-def mostrar_extrato_geral(pessoa):
-    limpa()
-    extrato = pessoa.get("extrato" , 0)
-    for registro in extrato:
-        print(f"ID : {registro['id']} | Data : {registro['data']} | Tipo : {registro['tipo']} | Valor : {registro['valor']}")
-    time.sleep(1)
-
-
-def limpa_cpf(cpf):
-    cpf_limpo = "".join(filter(str.isdigit, cpf))
-    return cpf_limpo
-
-
-def validar_cpf(cpf):
-    cpf = limpa_cpf(cpf)
-    if len(cpf) != 11:
-        limpa()
-        print("Cpf inválido, tente novamente")
-        time.sleep(1)
-        return False
-    return True
-
-
-def formata_cpf(cpf):
-    cpf_formatado = limpa_cpf(cpf)
-    cpf_formatado = f"{cpf_formatado[:3]}.{cpf_formatado[3:6]}.{cpf_formatado[6:9]}-{cpf_formatado[9:12]}"
-    return cpf_formatado
-
-
-carregar_usuario()
+from ferramentas.database import (
+    carregar_usuario,
+    salvar_usuario,
+    limpa,
+    buscar_usuario,
+    adicionar_saldo,
+    retirar_saldo,
+    trocar_dados,
+)
+from ferramentas.io_handler import (
+    validar_cpf,
+    formata_cpf,
+    verifica_valor,
+    verifica_senha,
+)
+from regras_do_banco.bank_logic import (
+    transferencia,
+    extrato_bancario,
+    mostrar_extrato_geral,
+)
+import os, time
 
 
 def primeiro_acesso():
@@ -189,26 +72,6 @@ def primeiro_acesso():
         print("Selecione uma opção valida")
         time.sleep(0.5)
         primeiro_acesso()
-
-
-def trocar_dados():
-    os.system("clear")
-    print("Para criar novo usuário digite o nome e a senha")
-    nomeatual = input("Digite seu nome atual : ")
-    senhaatual = input("Digite sua senha atual : ")
-    pessoas = carregar_usuario()
-    pessoa = buscar_usuario(nomeatual, pessoas)
-    if pessoa and pessoa["senha"] == senhaatual:
-        novonome = input("Novo nome: ")
-        novasenha = input("Nova senha: ")
-        limpa()
-        pessoa["nome"] = novonome
-        pessoa["senha"] = novasenha
-        salvar_usuario(pessoas)
-        print("Seus dados foram alterados")
-        input("")
-    else:
-        print("Dados errados!")
 
 
 def tela_inicial(pessoa, pessoas):
@@ -287,6 +150,3 @@ def tela_inicial(pessoa, pessoas):
             print("Digite uma oppção válida!")
             time.sleep(1)
             tela_inicial(pessoa, pessoas)
-
-
-primeiro_acesso()

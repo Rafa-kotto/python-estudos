@@ -1,7 +1,8 @@
 import time
-from src.utils.database import carregar_usuario, buscar_cpf,salvar_usuario
-from src.utils.io_handler import limpa
+from ferramentas.database import carregar_usuario, buscar_cpf, salvar_usuario
+from ferramentas.io_handler import limpa
 from datetime import datetime
+
 
 def saldo_positivo(pessoa, valor):
     pessoa["saldo"] = pessoa.get("saldo")
@@ -25,7 +26,7 @@ def transferencia(pessoa, valor, pessoas):
             pessoa["saldo"] = pessoa.get("saldo", 0)
             pessoa["saldo"] = pessoa["saldo"] - float(valor)
             destinatario["saldo"] = destinatario["saldo"] + float(valor)
-            extrato_bancario(pessoa,"transferencia",valor, destinatario )
+            extrato_bancario(pessoa, "transferencia", valor, destinatario)
             salvar_usuario(pessoas)
             print("deu certo")
             time.sleep(1)
@@ -33,21 +34,26 @@ def transferencia(pessoa, valor, pessoas):
             print("CPF não está cadastrado!")
             time.sleep(1)
 
+
 def extrato_bancario(pessoa, tipo, valor, outro=None):
     if "extrato" not in pessoa:
         pessoa["extrato"] = []
     registro = {
-        "tipo" : tipo,
-        "valor" : valor,
-        "data" : datetime.now().strftime("%d/%m/%Y %H:%M"),
-        "outro" : outro,
-        "id" : len(pessoa["extrato"]) + 1 
+        "tipo": tipo,
+        "valor": valor,
+        "data": datetime.now().strftime("%d/%m/%Y %H:%M"),
+        "outro": outro,
+        "id": len(pessoa["extrato"]) + 1,
     }
     pessoa["extrato"].append(registro)
 
+
 def mostrar_extrato_geral(pessoa):
     limpa()
-    extrato = pessoa.get("extrato" , 0)
+    extrato = pessoa.get("extrato", 0)
     for registro in extrato:
-        print(f"ID : {registro['id']} | Data : {registro['data']} | Tipo : {registro['tipo']} | Valor : {registro['valor']}")
+        print(
+            f"ID : {registro['id']} | Data : {registro['data']} | Tipo : {registro['tipo']} | Valor : {registro['valor']}"
+        )
     time.sleep(1)
+
