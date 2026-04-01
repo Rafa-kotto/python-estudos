@@ -64,21 +64,19 @@ def rendimento(valor,tempo):
     return simulado
 
 def emprestimo(valor):
-    renda = 3000
+    valor = float(valor)
+    renda = 3000.0
     juros = 0.02
-    parcelas = 3
-    vparecela = []
-    for parcelas in vparecela: 
-        print("test")
-        time.sleep(1)
-        vparecela = valor * (juros *(1 + juros)**parcelas) / ((1 + juros)**parcelas- 1) 
-        if vparecela < renda * 0.30:
-            print(f"Possiveis parcelas{parcelas}")
-            time.sleep(10)
-        else :
-            print("red")
-            time.sleep(10)
-    return vparecela
+    possiveis_parcela = []
+    parcelas = [3, 6, 9, 12, 24, 36]
+    for i in parcelas:
+        a = valor * ((juros *(1.00 + juros)**i) / ((1.00 + juros)**i - 1.00)) 
+        if a < renda * 0.30:
+            possiveis_parcela.append(i) 
+    if len(possiveis_parcela) < 1:
+        return ("Não a planos disponiveis")
+    else:
+        return possiveis_parcela
 
 
 
