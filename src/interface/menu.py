@@ -157,7 +157,10 @@ def tela_inicial(pessoa, pessoas):
         elif descisaobanco == "8":
             valor = input("Quanto você quer pegar emprestado : ")
             parcelas = emprestimo(valor)
-            print(parcelas)
+            limpa()
+            print("------Planos disponiveis------")
+            for p in parcelas:
+                print(f"Opção de {p}")  
             time.sleep(10)
         elif descisaobanco == "9":
             break

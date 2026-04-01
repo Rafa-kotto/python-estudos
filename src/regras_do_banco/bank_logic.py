@@ -57,11 +57,13 @@ def mostrar_extrato_geral(pessoa):
         )
     time.sleep(1)
 
-def rendimento(valor,tempo):
-    
+
+def rendimento(valor, tempo):
+
     imposto = float(valor) * (0.01107 * float(tempo))
     simulado = valor + imposto
     return simulado
+
 
 def emprestimo(valor):
     valor = float(valor)
@@ -70,16 +72,10 @@ def emprestimo(valor):
     possiveis_parcela = []
     parcelas = [3, 6, 9, 12, 24, 36]
     for i in parcelas:
-        a = valor * ((juros *(1.00 + juros)**i) / ((1.00 + juros)**i - 1.00)) 
+        a = valor * ((juros * (1.00 + juros) ** i) / ((1.00 + juros) ** i - 1.00))
         if a < renda * 0.30:
-            possiveis_parcela.append(i) 
+            possiveis_parcela.append(f"{i}x")
     if len(possiveis_parcela) < 1:
-        return ("Não a planos disponiveis")
+        return "Não a planos disponiveis"
     else:
         return possiveis_parcela
-
-
-
-    
-
-
