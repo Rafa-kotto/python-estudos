@@ -148,9 +148,9 @@ def tela_inicial(pessoa, pessoas):
             limpa()
             pessoa["saldo"] = pessoa.get("saldo")
             print(f"Saldo atual é {pessoa['saldo']}")
-            tempo = input("Quanto tempo você quer simular : ")
+            tempo = input("Quanto tempo você quer simular em meses : ")
             resultado = rendimento(pessoa["saldo"], tempo)
-            print(f"O valor será de R${resultado}")
+            print(f"O valor será daqui {tempo} meses será de R${resultado}")
             time.sleep(2)
         elif descisaobanco == "8":
             break

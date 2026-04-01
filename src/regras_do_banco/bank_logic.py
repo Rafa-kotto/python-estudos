@@ -58,9 +58,11 @@ def mostrar_extrato_geral(pessoa):
     time.sleep(1)
 
 def rendimento(valor,tempo):
+    
     imposto = float(valor) * (0.01107 * float(tempo))
     simulado = valor + imposto
     return simulado
+
 
     
 
