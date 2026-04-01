@@ -5,6 +5,7 @@ from ferramentas.io_handler import limpa
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH = os.path.join(BASE_DIR, "..", "..", "data", "dados.json")
 
+
 def salvar_usuario(pessoas):
     with open(DATA_PATH, "w") as arquivo:
         json.dump(pessoas, arquivo, indent=4)

@@ -17,6 +17,7 @@ from regras_do_banco.bank_logic import (
     transferencia,
     extrato_bancario,
     mostrar_extrato_geral,
+    rendimento,
 )
 import os, time
 
@@ -83,8 +84,9 @@ def tela_inicial(pessoa, pessoas):
         print("3 - retirar dinheiro")
         print("4 - transferir valor")
         print("5 - Alterar dados")
-        print("6 - Mostrar extrato")
-        print("7 - Sair")
+        print("6 - mostrar extrato")
+        print("7 - simular rendimento")
+        print("8 - Sair")
         descisaobanco = input("O que deseja fazer : ")
         if descisaobanco == "1":
             print("a")
@@ -142,8 +144,15 @@ def tela_inicial(pessoa, pessoas):
             tela_inicial(pessoa, pessoa)
         elif descisaobanco == "6":
             mostrar_extrato_geral(pessoa)
-
         elif descisaobanco == "7":
+            limpa()
+            pessoa["saldo"] = pessoa.get("saldo")
+            print(f"Saldo atual é {pessoa['saldo']}")
+            tempo = input("Quanto tempo você quer simular em meses : ")
+            resultado = rendimento(pessoa["saldo"], tempo)
+            print(f"O valor será daqui {tempo} meses será de R${resultado}")
+            time.sleep(2)
+        elif descisaobanco == "8":
             break
 
         else:
