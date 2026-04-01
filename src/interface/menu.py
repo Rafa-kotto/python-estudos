@@ -18,6 +18,7 @@ from regras_do_banco.bank_logic import (
     extrato_bancario,
     mostrar_extrato_geral,
     rendimento,
+    emprestimo,
 )
 import os, time
 
@@ -86,7 +87,8 @@ def tela_inicial(pessoa, pessoas):
         print("5 - Alterar dados")
         print("6 - mostrar extrato")
         print("7 - simular rendimento")
-        print("8 - Sair")
+        print("8 - realizar emprestimo")
+        print("9 - Sair")
         descisaobanco = input("O que deseja fazer : ")
         if descisaobanco == "1":
             print("a")
@@ -153,6 +155,11 @@ def tela_inicial(pessoa, pessoas):
             print(f"O valor será daqui {tempo} meses será de R${resultado}")
             time.sleep(2)
         elif descisaobanco == "8":
+            valor = input("Quanto você quer pegar emprestado : ")
+            parcelas = emprestimo(valor)
+            print(parcelas)
+            time.sleep(10)
+        elif descisaobanco == "9":
             break
 
         else:

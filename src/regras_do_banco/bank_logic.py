@@ -63,6 +63,24 @@ def rendimento(valor,tempo):
     simulado = valor + imposto
     return simulado
 
+def emprestimo(valor):
+    renda = 3000
+    juros = 0.02
+    parcelas = 3
+    vparecela = []
+    for parcelas in vparecela: 
+        print("test")
+        time.sleep(1)
+        vparecela = valor * (juros *(1 + juros)**parcelas) / ((1 + juros)**parcelas- 1) 
+        if vparecela < renda * 0.30:
+            print(f"Possiveis parcelas{parcelas}")
+            time.sleep(10)
+        else :
+            print("red")
+            time.sleep(10)
+    return vparecela
+
+
 
     
 
