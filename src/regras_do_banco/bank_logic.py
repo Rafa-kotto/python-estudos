@@ -1,6 +1,6 @@
 import time
 from ferramentas.database import carregar_usuario, buscar_cpf, salvar_usuario
-from ferramentas.io_handler import limpa
+from ferramentas.io_handler import formata_cpf, limpa
 from datetime import datetime
 
 
@@ -20,7 +20,8 @@ def saldo_positivo(pessoa, valor):
 def transferencia(pessoa, valor, pessoas):
     carregar_usuario()
     if saldo_positivo(pessoa, valor):
-        cpf = int(input("Digite o cpf do destinatio: "))
+        cpf = (input("Digite o cpf do destinatio: "))
+        cpf = formata_cpf(cpf)
         destinatario = buscar_cpf(cpf, pessoas)
         if destinatario:
             pessoa["saldo"] = pessoa.get("saldo", 0)
@@ -32,7 +33,7 @@ def transferencia(pessoa, valor, pessoas):
             time.sleep(1)
         else:
             print("CPF não está cadastrado!")
-            time.sleep(1)
+            time.sleep(2)
 
 
 def extrato_bancario(pessoa, tipo, valor, outro=None):
