@@ -75,8 +75,15 @@ def emprestimo(valor):
     for i in parcelas:
         a = valor * ((juros * (1.00 + juros) ** i) / ((1.00 + juros) ** i - 1.00))
         if a < renda * 0.30:
-            possiveis_parcela.append(f"{i}x")
+            possiveis_parcela.append(f"{i}")
     if len(possiveis_parcela) < 1:
         return "Não a planos disponiveis"
     else:
-        return possiveis_parcela
+        return (possiveis_parcela)
+    
+def mostrar_emprestimo(pessoa):
+    emprestimo = pessoa.get("emprestimo", 0)
+    for registro in emprestimo:
+        print(
+            f"Valor : {registro['valor']} | Parcelas : {registro['vezes']}"
+        )

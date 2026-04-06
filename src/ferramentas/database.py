@@ -38,10 +38,24 @@ def adicionar_saldo(pessoa, pessoas, valor):
         json.dump(pessoas, arquivo, indent=4)
 
 
+def adicionar_saldo_emprestado(pessoa, pessoas, valor, vezes):
+    if "emprestimo" not in pessoa:
+        pessoa["emprestimo"] = []
+    emprestimo = {
+        "valor": valor,
+        "vezes": vezes,
+    }
+    pessoa["emprestimo"].append(emprestimo)
+    pessoa["saldo"] = pessoa.get("saldo", 0) + float(valor)
+    with open(DATA_PATH, "w") as arquivo:
+        json.dump(pessoas, arquivo, indent=4)
+
+
 def retirar_saldo(pessoa, pessoas, valor):
     pessoa["saldo"] = pessoa.get("saldo", 0) - float(valor)
     with open(DATA_PATH, "w") as arquivo:
         json.dump(pessoas, arquivo, indent=4)
+
 
 def trocar_dados():
     os.system("clear")

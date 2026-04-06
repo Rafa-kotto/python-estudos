@@ -2,7 +2,7 @@
     {
         "nome": "rafa",
         "senha": "123",
-        "saldo": 9.0,
+        "saldo": 19.0,
         "cpf": 12345678901,
         "extrato": [
             {
@@ -91,6 +91,12 @@
                     ]
                 },
                 "id": 5
+            }
+        ],
+        "emprestimo": [
+            {
+                "valor": "10",
+                "vezes": "6"
             }
         ]
     },

@@ -1,4 +1,5 @@
 from ferramentas.database import (
+    adicionar_saldo_emprestado,
     carregar_usuario,
     salvar_usuario,
     limpa,
@@ -14,6 +15,7 @@ from ferramentas.io_handler import (
     verifica_senha,
 )
 from regras_do_banco.bank_logic import (
+    mostrar_emprestimo,
     transferencia,
     extrato_bancario,
     mostrar_extrato_geral,
@@ -85,7 +87,7 @@ def tela_inicial(pessoa, pessoas):
         print("3 - retirar dinheiro")
         print("4 - transferir valor")
         print("5 - Alterar dados")
-        print("6 - mostrar extrato")
+        print("6 - mostrar extrato/emprestimo")
         print("7 - simular rendimento")
         print("8 - realizar emprestimo")
         print("9 - Sair")
@@ -145,7 +147,15 @@ def tela_inicial(pessoa, pessoas):
             time.sleep(1)
             tela_inicial(pessoa, pessoa)
         elif descisaobanco == "6":
-            mostrar_extrato_geral(pessoa)
+            escolha = input("Deseja mostrar o extrato ou emprestimo ? (extrato/emprestimo) : ")
+            if escolha == "extrato":
+                mostrar_extrato_geral(pessoa)
+            elif escolha == "emprestimo":
+                mostrar_emprestimo(pessoa)
+            else:
+                print("Opção inválida!")
+                time.sleep(1)
+
         elif descisaobanco == "7":
             limpa()
             pessoa["saldo"] = pessoa.get("saldo")
@@ -155,13 +165,21 @@ def tela_inicial(pessoa, pessoas):
             print(f"O valor será daqui {tempo} meses será de R${resultado}")
             time.sleep(2)
         elif descisaobanco == "8":
+            limpa()
             valor = input("Quanto você quer pegar emprestado : ")
             parcelas = emprestimo(valor)
-            limpa()
             print("------Planos disponiveis------")
             for p in parcelas:
-                print(f"Opção de {p}")  
-            time.sleep(10)
+                print(f"Opção de {p}x")
+            planos = input("Qual plano deseja escolher : ")
+            if planos not in parcelas:
+                print("Plano indisponivel, tente novamente")
+                time.sleep(1)
+            else:
+                print(f"Você escolheu o plano de {planos}, parcelas de R${round(float(valor) / float(planos)                                                     , 2)}")
+                adicionar_saldo_emprestado(pessoa, pessoas, valor, planos)            
+            time.sleep(1)
+            
         elif descisaobanco == "9":
             break
 
