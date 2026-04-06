@@ -36,12 +36,14 @@ def primeiro_acesso():
             nome = input("Digite seu  nome : ")
             senha = input("Digite sua senha : ")
             cpf = input("Digite seu cpf : ")
+            renda = input("Digite sua renda mensal : R$ ")
             if validar_cpf(cpf):
                 nova_pessoa = {
                     "nome": nome,
                     "senha": senha,
                     "saldo": 0.0,
                     "cpf": formata_cpf(cpf),
+                    "renda": float(renda)
                 }
                 pessoas.append(nova_pessoa)
                 salvar_usuario(pessoas)
@@ -167,7 +169,12 @@ def tela_inicial(pessoa, pessoas):
         elif descisaobanco == "8":
             limpa()
             valor = input("Quanto você quer pegar emprestado : ")
-            parcelas = emprestimo(valor)
+            pessoa["renda"] = pessoa.get("renda")
+            if pessoa["renda"] is None:
+                print("Renda não cadastrada, não é possível realizar o empréstimo")
+                time.sleep(2)
+                continue
+            parcelas = emprestimo(valor, pessoa["renda"])
             print("------Planos disponiveis------")
             for p in parcelas:
                 print(f"Opção de {p}x")

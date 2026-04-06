@@ -66,9 +66,9 @@ def rendimento(valor, tempo):
     return simulado
 
 
-def emprestimo(valor):
+def emprestimo(valor, renda):
     valor = float(valor)
-    renda = 3000.0
+    renda = float(renda)
     juros = 0.02
     possiveis_parcela = []
     parcelas = [3, 6, 9, 12, 24, 36]
