@@ -1,11 +1,12 @@
 from ferramentas.database import (
     carregar_usuario,
+    deleta_conta,
     salvar_usuario,
     limpa,
     buscar_usuario,
     adicionar_saldo,
     retirar_saldo,
-    trocar_dados,
+    att_user_setings,
 )
 from ferramentas.io_handler import (
     validar_cpf,
@@ -139,9 +140,29 @@ def tela_inicial(pessoa, pessoas):
             transferencia(pessoa, valor, pessoas)
 
         elif descisaobanco == "5":
-            trocar_dados()
-            time.sleep(1)
-            tela_inicial(pessoa, pessoa)
+            limpa()
+            print("1 - Alterar nome e senha")
+            print("2 - Alterar apenas nome")
+            print("3 - Alterar apenas senha")
+            print("4 - deletar conta")
+            decisao = input("Digite a opção desejada : ")
+            if decisao == "1":
+                limpa()
+                print("Para atualização dos dados digite o nome e a senha")
+                nomeatual = input("Digite seu nome atual : ")
+                senhaatual = input("Digite sua senha atual : ")
+                limpa()
+                novonome = input("Novo nome: ")
+                novasenha = input("Nova senha: ")
+                att_user_setings(decisao, nomeatual, senhaatual, novonome, novasenha)
+                limpa()
+                time.sleep(1)
+            elif decisao == "4":
+                print("Para deletar a conta digite o nome e a senha")
+                nomeatual = input("Digite seu nome atual : ")
+                senhaatual = input("Digite sua senha atual : ")
+                deleta_conta(nomeatual, senhaatual)
+
         elif descisaobanco == "6":
             mostrar_extrato_geral(pessoa)
         elif descisaobanco == "7":

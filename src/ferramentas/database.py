@@ -1,6 +1,8 @@
 import json
 import os
+import time
 from ferramentas.io_handler import limpa
+from ferramentas.io_handler import verifica_senha
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH = os.path.join(BASE_DIR, "..", "..", "data", "dados.json")
@@ -43,21 +45,29 @@ def retirar_saldo(pessoa, pessoas, valor):
     with open(DATA_PATH, "w") as arquivo:
         json.dump(pessoas, arquivo, indent=4)
 
-def trocar_dados():
-    os.system("clear")
-    print("Para criar novo usuário digite o nome e a senha")
-    nomeatual = input("Digite seu nome atual : ")
-    senhaatual = input("Digite sua senha atual : ")
+def att_user_setings(decisao, nomeatual, senhaatual, novonome, novasenha):
     pessoas = carregar_usuario()
     pessoa = buscar_usuario(nomeatual, pessoas)
-    if pessoa and pessoa["senha"] == senhaatual:
-        novonome = input("Novo nome: ")
-        novasenha = input("Nova senha: ")
-        limpa()
-        pessoa["nome"] = novonome
-        pessoa["senha"] = novasenha
+    if verifica_senha(pessoa, senhaatual):
+        if decisao == "1":
+            pessoa["nome"] = novonome
+            pessoa["senha"] = novasenha
+        elif decisao == "2":
+            pessoa["nome"] = novonome
+        elif decisao == "3":
+            pessoa["senha"] = novasenha
         salvar_usuario(pessoas)
-        print("Seus dados foram alterados")
-        input("")
+        print("Dados atualizados com sucesso!")
+        
     else:
-        print("Dados errados!")
+        print("Nome ou senha incorretos. Não foi possível atualizar os dados.")
+
+def deleta_conta(nomeatual,senhaatual):
+    pessoas = carregar_usuario()
+    pessoa = buscar_usuario(nomeatual, pessoas)
+    if verifica_senha(pessoa, senhaatual):
+        pessoas.remove(pessoa)
+        salvar_usuario(pessoas)
+        print("Conta deletada com sucesso!")
+    else:
+        print("Nome ou senha incorretos. Não foi possível deletar a conta.")

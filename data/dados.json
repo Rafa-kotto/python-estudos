@@ -2,7 +2,7 @@
     {
         "nome": "rafa",
         "senha": "123",
-        "saldo": 9.0,
+        "saldo": 59.0,
         "cpf": 12345678901,
         "extrato": [
             {
@@ -91,6 +91,20 @@
                     ]
                 },
                 "id": 5
+            },
+            {
+                "tipo": "deposito",
+                "valor": 100.0,
+                "data": "24/08/2026 20:02",
+                "outro": null,
+                "id": 6
+            },
+            {
+                "tipo": "retirada",
+                "valor": 50.0,
+                "data": "24/08/2026 20:02",
+                "outro": null,
+                "id": 7
             }
         ]
     },
